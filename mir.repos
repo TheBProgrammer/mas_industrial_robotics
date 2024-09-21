@@ -1,16 +1,20 @@
 repositories:
+  BehaviorTree.CPP:
+    type: git
+    url: https://github.com/BehaviorTree/BehaviorTree.CPP.git
+    version: master
   brics_actuator:
     type: git
     url: https://github.com/mas-group/brics_actuator
     version: ros2
-  mas_industrial_robotics:
+  orocos_kinematics_dynamics:
     type: git
-    url: https://github.com/vamsikalagaturu/mas_industrial_robotics.git
-    version: humble/bringup
+    url: https://github.com/b-it-bots/orocos_kinematics_dynamics.git
+    version: b-it-bots
   youbot_description:
     type: git
     url: https://github.com/mas-group/youbot_description.git
-    version: foxy-devel
+    version: rolling-devel
   youbot_driver:
     type: git
     url: https://github.com/mas-group/youbot_driver.git

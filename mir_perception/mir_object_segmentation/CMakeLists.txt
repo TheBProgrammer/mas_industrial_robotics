@@ -73,7 +73,7 @@ ament_target_dependencies(${PROJECT_NAME}
   visualization_msgs
   std_msgs 
   sensor_msgs 
-  geometry_msgs
+  geometry_msgs 
 )
 
 install (

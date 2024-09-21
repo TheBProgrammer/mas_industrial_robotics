@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4">
+  <BehaviorTree ID="PerceiveLocationTree">
+    <Timeout msec="{timeout}">
+      <Sequence>
+        <Fallback>
+          <CheckIfBaseCentered location="{location_name}"/>
+          <MoveBaseSafeAction location="{location_name}"/>
+        </Fallback>
+        <MoveArmToPoseAction pose="{pose}"/>
+        <GraspAction command="Open"/>
+        <PerceiveLocationAction name="perceive_location_action"
+                                workstation_name="{ws_name}"/>
+      </Sequence>
+    </Timeout>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel>
+    <Action ID="CheckIfBaseCentered"
+            editable="true"/>
+    <Action ID="GraspAction"
+            editable="true">
+      <input_port name="command">open/close/value</input_port>
+    </Action>
+    <Action ID="MoveArmToPoseAction"
+            editable="true">
+      <input_port name="pose"/>
+    </Action>
+    <Action ID="MoveBaseSafeAction"
+            editable="true">
+      <input_port name="location">map locations</input_port>
+    </Action>
+    <Action ID="PerceiveLocationAction">
+      <input_port name="workstation_name"
+                  type="std::string"/>
+    </Action>
+  </TreeNodesModel>
+
+</root>

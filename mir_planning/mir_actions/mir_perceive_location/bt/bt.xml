@@ -1,0 +1,12 @@
+<root BTCPP_format="4">
+  <include path="perceive_location_bt.xml" />
+
+  <BehaviorTree ID="MainTree">
+    <Sequence>
+      <Script code=" ws_name:='WS00' " />
+      <Script code=" timeout:=10.0 " />
+      <!-- remap the variables -->
+      <SubTree ID="PerceiveLocationTree" ws_name="{ws_name}" />
+    </Sequence>
+  </BehaviorTree>
+</root>

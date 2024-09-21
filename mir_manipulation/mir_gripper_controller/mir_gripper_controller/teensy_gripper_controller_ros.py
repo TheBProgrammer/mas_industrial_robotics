@@ -58,17 +58,30 @@ class GripperController(Node):
             Keyword arguments:
             @param data -- command from the gripper
         """
-        command = int(data.command)
+
+        command = float(data.command)
         json_command = {
-                "command": 0,
+                "command": 0.0,
         }
 
-        if command == 1:
-            self.get_logger().debug('Closing the gripper.')
-            json_command['command'] = 1
+        if command > 1.0:
+            command = 1.0
+        elif command < -1.5:
+            command = 0.0
 
-        else:
+        if command == 1.0:
+            self.get_logger().debug('Closing the gripper.')
+            json_command['command'] = 1.0
+
+        elif command == 0.0:
             self.get_logger().debug('Opening the gripper.')
+            json_command['command'] = 0.0
+        elif command > 0.0 and command < 1.0:
+            self.get_logger().debug('Moving the gripper to a specific position.')
+            json_command['command'] = command
+        elif command < 0.0 and command > -1.5:
+            self.get_logger().debug('Opening the gripper above and beyond.')
+            json_command['command'] = command
 
         self.serial_msg.send(json_command)
     
@@ -77,11 +90,11 @@ class GripperController(Node):
         
         Assuming feedback is in the below json format:
         {
-            "state": "open" or "closed",
+            "state": [GRIPPER_OPENING, GRIPPER_INTER, GRIPPER_CLOSING, OBJECT_GRASPED, OBJECT_SLIPPED, GRIPPER_CLOSED, GRIPPER_OPEN],
             "right_gripper_pos": 0 to 360 degrees,
             "left_gripper_pos": 0 to 360 degrees,
             "parsing_error": 0,
-            "last_command": 1 or 0,
+            "last_command": [-1.5 to 1.0],
             # other fields can be added here
         }
         """

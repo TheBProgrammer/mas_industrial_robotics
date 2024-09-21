@@ -28,6 +28,7 @@ find_package(mir_interfaces REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED) 
 find_package(message_filters REQUIRED)
@@ -54,6 +55,7 @@ include_directories(
   ${lifecycle_msgs_INCLUDE_DIRS}
   ${rclcpp_lifecycle_INCLUDE_DIRS}
   ${rclcpp_INCLUDE_DIRS}
+  ${rclcpp_action_INCLUDE_DIRS}
   ${mir_interfaces_INCLUDE_DIRS}
   ${message_filters_INCLUDE_DIRS}
   ${pcl_ros_INCLUDE_DIRS}
@@ -84,6 +86,7 @@ target_compile_definitions(mmor
                 
 ament_target_dependencies(mmor 
   rclcpp
+  rclcpp_action
   rclcpp_lifecycle 
   message_filters 
   std_msgs 
@@ -118,6 +121,7 @@ target_compile_definitions(data_collector
                   
 ament_target_dependencies(data_collector
   rclcpp
+  rclcpp_action
   rclcpp_lifecycle 
   message_filters 
   std_msgs 

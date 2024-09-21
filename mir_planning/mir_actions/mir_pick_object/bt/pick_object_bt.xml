@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4">
+  <BehaviorTree ID="PickObjectTree">
+    <Timeout msec="{timeout}">
+      <Sequence>
+        <SelectObjectAction obj_name="{obj_name}"
+                            workstation_name="{ws_name}"/>
+        <RetryUntilSuccessful num_attempts="2">
+          <Sequence>
+            <ForceSuccess>
+              <AlignToPoseAction/>
+            </ForceSuccess>
+            <ForceSuccess>
+              <PerceiveLocationAction workstation_name="{ws_name}"/>
+            </ForceSuccess>
+            <ForceSuccess>
+              <SelectObjectAction obj_name="{obj_name}"
+                                  workstation_name="{ws_name}"/>
+            </ForceSuccess>
+            <MoveArmToPoseAction pose="{pose}"/>
+          </Sequence>
+        </RetryUntilSuccessful>
+        <RetryUntilSuccessful num_attempts="2">
+          <Sequence>
+            <GraspAction command="close"/>
+            <VerifyGraspAction/>
+          </Sequence>
+        </RetryUntilSuccessful>
+        <MoveArmAction direction="up"/>
+        <Fallback>
+          <VerifyGraspAction/>
+          <MoveArmAction direction="down"/>
+          <ForceFailure>
+            <GraspAction command="open"/>
+          </ForceFailure>
+        </Fallback>
+      </Sequence>
+    </Timeout>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel>
+    <Action ID="AlignToPoseAction"
+            editable="true"/>
+    <Action ID="GraspAction"
+            editable="true">
+      <input_port name="command">open/close/value</input_port>
+    </Action>
+    <Action ID="MoveArmAction"
+            editable="true">
+      <input_port name="direction">up/down</input_port>
+    </Action>
+    <Action ID="MoveArmToPoseAction"
+            editable="true">
+      <input_port name="pose"/>
+    </Action>
+    <Action ID="PerceiveLocationAction">
+      <input_port name="workstation_name"
+                  type="std::string"/>
+    </Action>
+    <Action ID="SelectObjectAction"
+            editable="true">
+      <input_port name="obj_name"/>
+      <input_port name="workstation_name"/>
+    </Action>
+    <Action ID="VerifyGraspAction"
+            editable="true"/>
+  </TreeNodesModel>
+
+</root>

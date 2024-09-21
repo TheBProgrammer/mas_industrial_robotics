@@ -31,11 +31,14 @@ set(perception_msg_files
   "mir_perception/msg/PlanarPolygon.msg"
   "mir_perception/msg/NamedShape.msg"
   "mir_perception/msg/NamedColor.msg"
+  "mir_perception/msg/Workstation.msg"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${manipulation_msg_files}
   ${perception_msg_files}
+  "mir_perception/action/ObjectDetection.action"
+  "mir_world_model/action/ObjectSelector.action"
   DEPENDENCIES builtin_interfaces std_msgs geometry_msgs sensor_msgs
 )
 

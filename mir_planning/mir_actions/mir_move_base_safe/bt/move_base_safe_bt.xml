@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4">
+  <BehaviorTree ID="MoveBaseSafeTree">
+    <Timeout msec="{timeout}">
+      <Sequence>
+        <MoveBaseSafeAction location="{location_name}"/>
+      </Sequence>
+    </Timeout>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel>
+    <Action ID="MoveBaseSafeAction"
+            editable="true">
+      <input_port name="location">map locations</input_port>
+    </Action>
+  </TreeNodesModel>
+
+</root>

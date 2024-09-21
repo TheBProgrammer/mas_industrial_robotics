@@ -15,6 +15,8 @@
 #include <iostream>
 #include <termios.h>
 #include <unistd.h>
+#include <cstring> 
+#include <iostream>
 
 #include "lifecycle_msgs/msg/state.hpp"
 #include "lifecycle_msgs/msg/transition.hpp"
@@ -25,7 +27,7 @@
 
 #include "rcutils/logging_macros.h"
 
-extern char key;
+extern char* key;
 extern const char* display;
 
 // Adapted from  ROS2 lifecycle demos
@@ -50,23 +52,31 @@ public:
 
   void init();
 
+  bool execute(std::string command);
+
   bool get_state(std::chrono::seconds time_out);
   
   bool change_state(std::uint8_t transition, std::chrono::seconds time_out);
+
+  char* getch(void);
  
 private:
 
   std::shared_ptr<rclcpp::Client<lifecycle_msgs::srv::GetState>> client_get_state_;
   std::shared_ptr<rclcpp::Client<lifecycle_msgs::srv::ChangeState>> client_change_state_;
   std::string lifecycle_node;
+  std::string command;
   std::string get_state_topic; 
 	std::string change_state_topic;
   std::string node_get_state_topic;
   std::string node_change_state_topic; 
 
+  // max length of command line input
+  static const int MAX_INPUT_LENGTH = 10;
+
 };
 
-int getch(void);
+
 void callee_script(std::shared_ptr<LifecycleController> lifecycle_controller);
 
 #endif  

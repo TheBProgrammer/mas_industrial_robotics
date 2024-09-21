@@ -1,0 +1,13 @@
+<root BTCPP_format="4">
+  <include path="pick_object_bt.xml" />
+
+  <BehaviorTree ID="MainTree">
+    <Sequence>
+      <Script code=" ws_name:='WS00' " />
+      <Script code=" obj_name:='AXIS' " />
+      <Script code=" timeout:=10.0 " />
+      <!-- remap the variables -->
+      <SubTree ID="PickObjectTree" ws_name="{ws_name}" obj_name="{obj_name}" />
+    </Sequence>
+  </BehaviorTree>
+</root>

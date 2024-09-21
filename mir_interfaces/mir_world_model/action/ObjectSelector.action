@@ -1,0 +1,7 @@
+string obj_name
+string workstation_name
+---
+bool success
+Object obj
+---
+string message

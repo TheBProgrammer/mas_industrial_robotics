@@ -13,7 +13,7 @@
   <xacro:include filename="$(find youbot_description)/urdf/youbot_base/base.urdf.xacro" />
   <xacro:include filename="$(find mir_description)/urdf/misc/rear_platform_v2.urdf.xacro" />
   <!-- youbot arm and gripper-->
-  <xacro:include filename="$(find youbot_description)/urdf/youbot_arm/arm.urdf.xacro"/>
+  <xacro:include filename="$(find youbot_description)/urdf/youbot_arm/arm_corrected_dynamics.urdf.xacro"/>
   <xacro:include filename="$(find mir_description)/urdf/misc/full_platform.urdf.xacro" />
   <xacro:include filename="$(find mir_description)/urdf/grippers/dynamixel/v2/dynamixel_gripper.urdf.xacro" />
   <!--xacro:include filename="$(find mir_description)/urdf/grippers/dynamixel/d435_center/dynamixel_gripper.urdf.xacro" /-->

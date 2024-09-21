@@ -1,0 +1,11 @@
+/world_model_node:
+  ros__parameters:
+    workstations:
+      ws_1:
+        name: WS01
+        type: Normal
+        height: 5.0
+      ws_2:
+        name: SH01
+        type: Shelf
+        height: 10.0

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4">
+  <include path="bt/perceive_location_bt.xml"/>
+
+  <include path="bt/pick_object_bt.xml"/>
+
+  <BehaviorTree ID="MainTree">
+    <Sequence>
+      <Script code="ws_name:=&apos;WS00&apos;"/>
+      <Script code="obj_name:=&apos;AXIS&apos;"/>
+      <SubTree ID="PerceiveLocationTree"
+               ws_name="{ws_name}"
+               _autoremap="true"/>
+      <SubTree ID="PickObjectTree"
+               obj_name="{obj_name}"
+               ws_name="{ws_name}"
+               _autoremap="true"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel/>
+
+</root>

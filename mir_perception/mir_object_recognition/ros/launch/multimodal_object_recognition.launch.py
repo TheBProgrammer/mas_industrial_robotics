@@ -42,11 +42,13 @@ def generate_launch_description():
     'ss22_competition.yaml'
   )
 
-  yolo_weights = os.path.join(
-    get_package_share_directory('mir_perception_models'),
-    'yolo',
-    'ss22_competition_best.onnx'
-  )
+  # yolo_weights = os.path.join(
+  #   get_package_share_directory('mir_perception_models'),
+  #   'yolo',
+  #   'ss22_competition_best.onnx'
+  # )
+
+  yolo_weights = "/home/batsy/Downloads/ss22_competition_best.onnx"
 
   container = ComposableNodeContainer(
     name="MMOR_container",

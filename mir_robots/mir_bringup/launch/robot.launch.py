@@ -20,12 +20,15 @@ import os
 def generate_launch_description():
 
     # argument for robot arm only launch
-    declare_arm_only_arg = DeclareLaunchArgument(
-        'arm_only',
-        default_value='false',
-        description='Launch only robot arm')
+    declare_joint_state_gui = DeclareLaunchArgument(
+        'joint_state_gui',
+        default_value='true',
+        description='Launch joint_state_publisher_gui?')
 
     robot_name = os.environ['ROBOT']
+
+    if not robot_name:
+        raise Exception("The 'ROBOT' environment variable is not set.")
 
     # planning_context
     youbot_xacro_file = os.path.join(get_package_share_directory('mir_hardware_config'), robot_name, 'urdf',
@@ -47,18 +50,18 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('mir_bringup'), 'robots',),
             f'/youbot-brsu-common.launch.py']),
-        condition=UnlessCondition(LaunchConfiguration('arm_only'))
+        condition=UnlessCondition(LaunchConfiguration('joint_state_gui'))
     )
 
     robot_arm_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('mir_bringup'), 'robots',),
             f'/youbot-brsu-arm.launch.py']),
-        condition=IfCondition(LaunchConfiguration('arm_only'))
+        condition=IfCondition(LaunchConfiguration('joint_state_gui'))
     )
 
     return LaunchDescription([
-        declare_arm_only_arg,
+        declare_joint_state_gui,
         robot_state_publisher,
         robot_common_launch,
         robot_arm_launch

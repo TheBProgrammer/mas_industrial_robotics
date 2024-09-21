@@ -1,40 +1,59 @@
-# mas_industrial_robotics - humble/bringup
+# mas_industrial_robotics
 
-The branch contains the necessary packages to bringup the robot with driver controllers.
+## Status
 
-## Dependent packages
-- control_msgs
-- urg_node
-- joy_node
-- moveit_msgs
-- xacro
-- twist-mux
-- joint-state-publisher
-- joint-state-publisher-gui
-- realsense sdk and realsense2-ros
+### Working modules
+
+- mir_bringup
+- mir_perception
+  - mir_object_recognition
+  - mir_ppt_detection
+
+### Modules under development
+
+- mir_navigation
+- mir_manipulation
+- mir_actions
+
 
 ## Setup
 
 - Create a workspace
-```bash
-mkdir -p ~/mir/src
-```
+  ```bash
+  mkdir -p ~/mir/src
+  ```
 
-- Clone the humble/bringup branch.
-```bash
-cd ~/mir/src
+- Clone the rolling branch.
+  ```bash
+  cd ~/mir/src
 
-git clone -b humble https://github.com/mas_industrial_robotics.git
-```
+  git clone -b rolling https://github.com/mas_industrial_robotics.git
+  ```
 
 - Clone the dependency packages
-```
-cd ~/mir/src
+  ```bash
+  cd ~/mir/src
 
-vcs import < mas_industrial_robots/mir.repos
-```
+  vcs import < mas_industrial_robotics/mir.repos
+  ```
+
+- Build the workspace
+  ```bash
+  cd ~/mir
+
+  colcon build --symlink-install
+  ```
+
+### Usage
+
+
+- View the youbot in rviz
+  ```bash
+  ros2 launch mir_bringup view_youbot.launch.py
+  ```
 
 - Launch the bringup
 ```bash
 ros2 launch mir_bringup robot.launch.py
 ```
+

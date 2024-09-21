@@ -11,6 +11,7 @@ This module contains a component that communicates with
 the particular arduino board and sends the message framework via
 serial port with specified baudrate, timeout and board pid.
 """
+import time
 import serial
 import json
 
@@ -87,3 +88,18 @@ class SerialInterface:
             msgs_json.append(json.loads(msg))
 
         return msgs_json
+    
+if __name__ == '__main__':
+    serial_interface = SerialInterface(9600, 0.1, '239A')
+    serial_interface.open_port()
+    serial_interface.send({'command': 1})
+    time.sleep(1)
+    serial_interface.send({'command': 0.5})
+    time.sleep(1)
+    serial_interface.send({'command': 0.0})
+    time.sleep(1)
+    serial_interface.send({'command': 0.2})
+    time.sleep(1)
+    serial_interface.send({'command': 0.8})
+    time.sleep(1)
+    serial_interface.send({'command': 0.0})
