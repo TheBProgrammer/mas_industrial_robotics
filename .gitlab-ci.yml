@@ -1,0 +1,52 @@
+# Use the custom image you built locally
+image: skratch-ci:latest
+
+variables:
+  ROS_DISTRO: humble
+  APT_CACHE_DIR: "$CI_PROJECT_DIR/.apt-cache"
+
+cache:
+  paths:
+    - .apt-cache
+
+stages:
+  - build
+  - test
+
+before_script:
+  - source /opt/ros/$ROS_DISTRO/setup.bash
+  
+  # Organize folder structure
+  - mkdir -p src
+  - mv skratch_* src/ || echo "Packages already moved"
+  
+  # Check for NEW dependencies
+  # This runs in 1 second because the big stuff is already installed in the image.
+  - apt-get update -y
+  - rosdep update
+  - rosdep install --from-paths src --ignore-src -y --rosdistro $ROS_DISTRO
+
+build_job:
+  stage: build
+  tags:
+    - ros2
+  script:
+    - colcon build --symlink-install
+  artifacts:
+    paths:
+      - install/
+      - build/
+    expire_in: 1 day
+
+test_job:
+  stage: test
+  tags:
+    - ros2
+  dependencies:
+    - build_job
+  script:
+    - source install/setup.bash
+    - xvfb-run colcon test --event-handlers console_direct+
+    - colcon test-result --verbose
+    - echo "Running PEP 257 Checks..."
+    - ament_pep257 src/

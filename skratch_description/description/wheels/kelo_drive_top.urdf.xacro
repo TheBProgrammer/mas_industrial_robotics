@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<!--
+Copyright (c) 2025
+KELO Robotics GmbH
+
+Using kelo drive wheels with some modifications to suit skratch bot
+-->
+
+<!-- Top-level KELO drive assembly -->
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Include the mid part macro -->
+  <xacro:include filename="$(find skratch_description)/description/wheels/kelo_drive_mid.urdf.xacro" />
+
+  <!--
+    Macro for full KELO drive:
+    - Top part fixed
+    - Mid part configurable (movable or fixed joints)
+  -->
+  <xacro:macro name="kelo_drive_top" params="name parent *origin movable_joints:=true">
+
+    <!-- Top part link -->
+    <link name="${name}_top_part_link">
+      <visual>
+        <origin xyz="0 0 0.081" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="file://$(find skratch_description)/meshes/kelo_drive/kelo_drive_top_part.dae" scale="1 1 1"/>
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0.081" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="file://$(find skratch_description)/meshes/kelo_drive/kelo_drive_top_part.dae" scale="1 1 1"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="0.00054 -0.00146 0.01031" rpy="0 0 0"/>
+        <mass value="0.43207"/>
+        <inertia ixx="0.00036965278" ixy="0.00001352474" ixz="-0.00000005992" iyy="0.00039670119" iyz="0.00000019355" izz="0.00073957435"/>
+      </inertial>
+    </link>
+
+    <!-- Fixed joint connecting top part to parent -->
+    <joint name="${name}_top_part_joint" type="fixed">
+      <xacro:insert_block name="origin"/>
+      <parent link="${parent}"/>
+      <child link="${name}_top_part_link"/>
+    </joint>
+
+    <!-- Include the mid part under the top part link -->
+    <xacro:kelo_drive_mid 
+        name="${name}_drive" 
+        parent="${name}_top_part_link" 
+        movable_joints="${movable_joints}">
+      <origin xyz="0 0 -0.01" rpy="0 0 0"/>
+    </xacro:kelo_drive_mid>
+
+  </xacro:macro>
+
+</robot>
+

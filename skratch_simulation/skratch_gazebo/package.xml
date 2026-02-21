@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>skratch_gazebo</name>
+    <version>1.0.0</version>
+    <description>Gazebo simulations for skratch robot robots</description>
+
+    <maintainer email="sajjasaianudeep@gmail.com">Anudeep Sajja</maintainer>
+    
+
+    <license>LGPL2.1/BSD</license>
+
+    <author email="sushant.chavan@locomotec.com">Sushant Chavan</author>
+    <author email="dharmin.bakaraniya@locomotec.com">Dharmin B.</author>
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+    <depend>launch</depend>
+    <depend>launch_ros</depend>
+
+    <depend>skratch_description</depend>
+    <depend>robot_state_publisher</depend>
+    <depend>joint_state_publisher</depend>
+    <depend>xacro</depend>
+    <depend>gazebo_ros_pkgs</depend>
+    <depend>geometry_msgs</depend>
+    <depend>nav_msgs</depend>
+    <depend>rclcpp</depend>
+    <depend>sensor_msgs</depend>
+    <depend>tf2</depend>
+    <depend>rviz2</depend>
+    <depend>ament_index_python</depend>
+    <depend>dual_laser_merger</depend>
+    <depend>skratch_sensor</depend>
+    <export>
+      <build_type>ament_cmake</build_type>
+    </export>
+
+
+</package>

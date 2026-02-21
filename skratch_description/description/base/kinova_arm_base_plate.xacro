@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+Copyright (c) 2025
+b-it-bots
+Hochschule Bonn-Rhein-Sieg
+
+Authors:
+Chaitanya Gumudala
+-->
+<robot name="arm_base_plate" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="arm_base_plate" params="name">
+        <link name="${name}">
+            <inertial>
+                <mass value="0.4"/>
+                <origin xyz="0 0 0.002" rpy="0 0 0"/>
+                <inertia ixx="0.001345" iyy="0.00495" izz="0.00723" ixy="0.0" ixz="0.0" iyz="0.0"/>
+            </inertial>
+            <visual>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 1.57" />
+                <geometry>
+                    <mesh filename="file://$(find skratch_description)/meshes/base/arm_base_plate.stl" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <material name="Grey">
+                    <color rgba="0.5 0.5 0.5 1.0"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 1.57" />
+                <geometry>
+                    <mesh filename="file://$(find skratch_description)/meshes/base/arm_base_plate.stl" scale="0.001 0.001 0.001"/>
+                </geometry>
+            </collision>
+        </link>
+        <gazebo reference="${name}">
+            <material>Gazebo/Grey</material>
+        </gazebo>
+    </xacro:macro>
+</robot>

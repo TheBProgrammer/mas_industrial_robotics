@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+Copyright (c) 2025
+b-it-bots
+Hochschule Bonn-Rhein-Sieg
+
+Authors:
+Chaitanya Gumudala
+-->
+<robot name="lidar_mount" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="lidar_mount" params="name parent *origin">
+        <xacro:include filename="$(find skratch_description)/description/sensors/hokuyo_urg_04lx_ug01.xacro"/>
+        <link name="${name}_lidar_mount">
+            <inertial>
+                <mass value="0.1"/>
+                <origin xyz="0 0 -0.0985" rpy="0 0 0"/>
+                <inertia ixx="0.000486742" iyy="0.000486742" izz="0.000326667" ixy="0.0" ixz="0.0" iyz="0.0"/>
+            </inertial>
+            <visual>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+                <geometry>
+                    <mesh filename="file://$(find skratch_description)/meshes/mounts/lidar_mount.stl" scale="0.0001 0.0001 0.0001"/>
+                </geometry>
+                <material name="White">
+                    <color rgba="0.9 0.9 0.9 1.0"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+                <geometry>
+                    <mesh filename="file://$(find skratch_description)/meshes/mounts/lidar_mount.stl" scale="0.0001 0.0001 0.0001"/>
+                </geometry>
+            </collision>
+        </link>
+        <gazebo reference="${name}">
+            <material>Gazebo/Grey</material>
+        </gazebo>
+        <joint name="${name}_lidar_mount_joint" type="fixed">
+            <xacro:insert_block name="origin"/>
+            <parent link="${parent}"/>
+            <child link="${name}_lidar_mount"/>
+        </joint>
+
+        <xacro:if value="$(arg use_sim)">
+            <xacro:hokuyo_urg_lidar 
+                name="${name}_lidar" 
+                ros_topic="/${name}_scan"
+                update_rate="10"
+                min_angle="-1.57"
+                max_angle="2.15" />
+
+            <joint name="${name}_lidar_joint" type="fixed">
+                <origin xyz="0.048 -0.048 -0.10" rpy="0.0 0.0 -0.785"/>
+                <parent link="${name}_lidar_mount"/>
+                <child link="${name}_lidar_stl_link"/>
+            </joint>
+        </xacro:if>
+
+
+    </xacro:macro>
+</robot>

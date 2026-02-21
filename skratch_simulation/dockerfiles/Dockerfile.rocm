@@ -1,0 +1,116 @@
+FROM rocm/rocm-terminal:6.4
+# 6.4 is based on ubuntu 22.04
+
+SHELL ["/bin/bash", "-c"]
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
+ARG USER_NAME=bitbots
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+USER root
+
+RUN usermod -l ${USER_NAME} -d /home/${USER_NAME} -m rocm-user && \
+    groupmod -n ${USER_NAME} rocm-user
+
+# Install system dependencies
+RUN apt-get -y update && apt-get install -y \
+    curl \
+    lsb-release \
+    gnupg \
+    bash-completion \
+    software-properties-common \
+    wget \
+    ca-certificates \
+    build-essential \
+    cmake \
+    git \
+    vim \
+    nano \
+    htop \
+    python3 \
+    python3-pip \
+    sudo \
+    tmux \
+    locales \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN add-apt-repository universe
+
+RUN apt -y update && \
+    locale-gen en_US en_US.UTF-8 && \
+    update-locale 
+
+ENV LC_ALL=en_US.UTF-8
+ENV LANG=en_US.UTF-8
+
+# Create non root user for pip
+RUN echo "${USER_NAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USER_NAME}
+RUN chmod 0440 /etc/sudoers.d/${USER_NAME}
+
+# Set up working directory
+WORKDIR /home/${USER_NAME}
+ENV HOME=/home/${USER_NAME}
+
+# Install ROS2 
+RUN apt-get update && apt-get install -y curl && \
+    ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}') && \
+    curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo ${UBUNTU_CODENAME:-${VERSION_CODENAME}})_all.deb" && \
+    dpkg -i /tmp/ros2-apt-source.deb && \
+    rm /tmp/ros2-apt-source.deb
+
+ENV ROS_WS=/home/${USER_NAME}/skratch_ws
+RUN mkdir -p ${ROS_WS}/src && \
+    chown ${USER_NAME}:${USER_NAME} -R ${ROS_WS}
+# ROS dev tools
+RUN apt -y update && sudo apt install -y \
+  python3-flake8-docstrings \
+  python3-pip \
+  python3-pytest-cov \
+  ros-dev-tools \
+  python3-flake8-blind-except \
+  python3-flake8-builtins \
+  python3-flake8-class-newline \
+  python3-flake8-comprehensions \
+  python3-flake8-deprecated \
+  python3-flake8-import-order \
+  python3-flake8-quotes \
+  python3-pytest-repeat \
+  python3-pytest-rerunfailures \
+  python3-colcon-common-extensions 
+
+RUN apt install -y ros-humble-desktop-full \
+    ros-humble-gazebo-ros-pkgs \
+    ros-humble-joint-state-publisher \
+    gazebo \
+    libgazebo-dev 
+  
+RUN cd ${ROS_WS} && \
+    rosdep init
+
+USER ${USER_NAME}
+RUN cd ${ROS_WS} && rosdep update
+RUN mkdir -p ${ROS_WS}/src && cd ${ROS_WS}/src && \
+    . /opt/ros/humble/setup.bash && \
+    git clone -b dev_classic --single-branch https://github.com/b-it-bots/skratch_description.git && \
+    git clone -b dev_classic --single-branch https://github.com/b-it-bots/skratch_simulation.git
+
+# added ros source
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+
+RUN cd ${ROS_WS} && \
+    . /opt/ros/humble/setup.bash && \
+    colcon build --symlink-install --packages-select skratch_description skratch_gazebo
+
+# Set display environment variable
+USER ${USER_NAME}
+
+ENV DISPLAY=:0
+
+USER root
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+USER ${USER_NAME}
+ENTRYPOINT ["/entrypoint.sh"] 

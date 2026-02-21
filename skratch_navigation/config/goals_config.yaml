@@ -1,0 +1,17 @@
+# csv_path: 'nav_metrics_sequential.csv'  
+nav_metrics_logger:
+  ros__parameters:
+
+    goal_poses: '[
+      {"x": -8.707, "y": -8.681, "yaw": 1.599, "frame_id": "map"},
+      {"x": -0.999, "y": -0.220, "yaw": 1.585, "frame_id": "map"},
+      {"x": -0.062, "y": 9.145, "yaw": 0.001, "frame_id": "map"},
+      {"x": 8.820, "y": 0.378, "yaw": -1.571, "frame_id": "map"},
+      {"x": 1.494, "y": -8.661, "yaw": 1.624, "frame_id": "map"}
+    ]'
+    
+    # Controller and planner names for CSV logging
+    controller_name: 'DWB_tv'
+    planner_name: 'Theta_tv'
+    
+    delay_between_goals: 3.0

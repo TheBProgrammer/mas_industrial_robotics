@@ -1,0 +1,84 @@
+<?xml version='1.0'?>
+
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="skratch_platform_gazebo">
+
+    <!-- true for real robot, false for classic gazebo simulation -->
+    <xacro:arg name="movable_joints" default="false" />  
+    <xacro:arg name="use_sim" default="true"/>
+
+    <!--Include necessary xacros-->
+    <xacro:include filename="$(find skratch_description)/description/base/skratch_base.xacro" />
+    <xacro:include filename="$(find skratch_description)/description/wheels/kelo_drive_top.urdf.xacro" />
+    <xacro:include filename="$(find skratch_description)/description/sensor_mounts/lidar_mount.xacro"/>
+    <xacro:include filename="$(find skratch_description)/description/base/kinova_arm_base_plate.xacro"/>
+
+    <!-- BASE_FOOTPRINT -->
+    <link name="base_footprint"/>
+    <joint name="base_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+     
+    <!-- Start building the robot -->
+
+    <link name="base_link"/>
+
+    <!-- Skratch complete base-->
+   <xacro:skratch_base name="skratch_base"/>
+    <joint name="skratch_base_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.06" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="skratch_base"/>
+    </joint>
+    
+    <!-- Arm base plate for Kinnova-->
+    <xacro:arm_base_plate name="arm_base_plate"/>
+    <joint name="skratch_arm_base_joint" type="fixed">
+        <origin xyz="0.211 0.0 0.159" rpy="0.0 0.0 0.0"/>
+        <parent link="skratch_base"/>
+        <child link="arm_base_plate"/>
+    </joint>
+
+    <!-- Build wheels using kelo drive -->
+
+    <xacro:kelo_drive_top name="front_left" parent="skratch_base" movable_joints="$(arg movable_joints)">
+        <origin xyz="0.190 0.118 0.0" rpy="0.0 0.0 0.0"/>
+    </xacro:kelo_drive_top>
+
+    <xacro:kelo_drive_top name="rear_left" parent="skratch_base" movable_joints="$(arg movable_joints)">
+        <origin xyz="-0.190 0.118 0.0" rpy="0.0 0.0 0.0"/>
+    </xacro:kelo_drive_top>
+
+    <xacro:kelo_drive_top name="front_right" parent="skratch_base" movable_joints="$(arg movable_joints)">
+        <origin xyz="0.190 -0.118 0.0" rpy="0.0 0.0 0.0"/>
+    </xacro:kelo_drive_top>
+
+    <xacro:kelo_drive_top name="rear_right" parent="skratch_base" movable_joints="$(arg movable_joints)">
+        <origin xyz="-0.190 -0.118 0.0" rpy="0.0 0.0 0.0"/>
+    </xacro:kelo_drive_top>
+
+    <!-- Lidar Mount -->
+    <xacro:lidar_mount name="front" parent="skratch_base">
+        <origin xyz="0.272 -0.158 0.1416" rpy="0.0 0.0 0.0"/>
+    </xacro:lidar_mount>
+
+    <xacro:lidar_mount name="rear" parent="skratch_base">
+        <origin xyz="-0.272 0.167 0.1416" rpy="0.0 0.0 3.14"/>
+    </xacro:lidar_mount>
+
+
+    <!-- Gazebo Plugins -->
+
+    <xacro:if value="$(arg movable_joints)">
+        <!-- Include the xacro file to start gazebo ros control plugin -->
+        <xacro:include filename="$(find skratch_description)/gazebo/gazebo_ros_control.xacro" />
+    </xacro:if>
+    <xacro:unless value="$(arg movable_joints)">
+        <!-- Include the xacro file to start gazebo ros planar move plugin -->
+        <xacro:include filename="$(find skratch_description)/gazebo/gazebo_ros_planar_move.xacro" />
+    </xacro:unless>
+
+
+</robot>
